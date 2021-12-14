@@ -11,7 +11,6 @@ I2C Adresses:
 
 Sources:
 
-https://controlautomaticoeducacion.com/arduino/bus-comunicacion-i2c/
-https://www.instructables.com/DIY-Miniature-Solar-Tracker/
-https://www.instructables.com/Make-Your-Own-Power-MeterLogger/
--.
+-   https://controlautomaticoeducacion.com/arduino/bus-comunicacion-i2c/
+-   https://www.instructables.com/DIY-Miniature-Solar-Tracker/
+-   https://www.instructables.com/Make-Your-Own-Power-MeterLogger/
