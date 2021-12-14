@@ -1,5 +1,5 @@
 # Solar-Tracker
-Proyecto dispositivos digitales programables.
+## Proyecto dispositivos digitales programables
 
 
 I2C Adresses:
