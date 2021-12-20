@@ -20,6 +20,7 @@ float shuntvoltage_A = 0;
 float busvoltage_A = 0;
 float current_mA_A = 0;
 float loadvoltage_A = 0;
+float power_A = 0;
 float energy_A = 0;
 
 //Valores para el sensor B
@@ -27,6 +28,7 @@ float shuntvoltage_B = 0;
 float busvoltage_B = 0;
 float current_mA_B = 0;
 float loadvoltage_B = 0;
+float power_B = 0;
 float energy_B = 0;
 
 void setup() {
@@ -83,23 +85,69 @@ void displaydata() {
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(1);
+
+//Display A
   display.setCursor(0, 0);
-  display.println(loadvoltage_A);
-  display.setCursor(35, 0);
-  display.println("V");
+  display.println("A: ");
+  display.setCursor(12, 0);
+  display.println(power_A);
+
   display.setCursor(50, 0);
-  display.println(current_mA_A);
-  display.setCursor(95, 0);
-  display.println("mA");
-  display.setCursor(0, 10);
-  display.println(loadvoltage_A * current_mA_A);
-  display.setCursor(65, 10);
   display.println("mW");
+
+  display.setCursor(0, 10);
+  display.println(loadvoltage_A);
+  display.setCursor(35, 10);
+  display.println("V");
+
   display.setCursor(0, 20);
-  display.println(energy_A);
-  display.setCursor(65, 20);
-  display.println("mWh");
+  display.println(current_mA_A);
+  display.setCursor(35, 20);
+  display.println("mA");
+
+//Display B
+  display.setCursor(70, 0);
+  display.println("B: ");
+  display.setCursor(82, 0);
+  display.println(power_B);
+
+  display.setCursor(110, 0);
+  display.println("mW");
+
+  display.setCursor(70, 10);
+  display.println(loadvoltage_B);
+  display.setCursor(100, 10);
+  display.println("V");
+
+  display.setCursor(70, 20);
+  display.println(current_mA_B);
+  display.setCursor(100, 20);
+  display.println("mA");
+
+
+
   display.display();
+
+ 
+//  display.setCursor(0, 0);
+//  display.println(loadvoltage_A);
+//  display.setCursor(28, 0);
+//  display.println("V");
+//  display.setCursor(50, 0);
+//  display.println(current_mA_A);
+//  display.setCursor(95, 0);
+//  display.println("mA");
+//  display.setCursor(0, 10);
+//  display.println(loadvoltage_A * current_mA_A);
+//  display.setCursor(65, 10);
+//  display.println("mW");
+//  display.setCursor(0, 20);
+//  display.println(energy_A);
+//  display.setCursor(65, 20);
+//  display.println("mWh");
+//  display.display();
+
+
 }
 
 void ina219values() {
@@ -108,7 +156,9 @@ void ina219values() {
   busvoltage_A = ina_A.getBusVoltage_V();
   current_mA_A = ina_A.getCurrent_mA();
   loadvoltage_A = busvoltage_A + (shuntvoltage_A / 1000);
+  power_A = loadvoltage_A * current_mA_A;
   energy_A = energy_A + loadvoltage_A * current_mA_A / 3600;
+  
 
   //Valores para sensor B
   shuntvoltage_B = ina_B.getShuntVoltage_mV();
