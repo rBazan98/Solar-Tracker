@@ -53,8 +53,6 @@ int waittime = 1;
 
 void setup() {
 
-/////////////////////////////////////////////////////////////
-
 //servos
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
@@ -67,8 +65,6 @@ void setup() {
   ICR1 = 40000;
   OCR1A = 3000;
   OCR1B = 3600;
-
-/////////////////////////////////////////////////////////////
   
   // Iniciando comunicación I2C con los tres dispositivos
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
