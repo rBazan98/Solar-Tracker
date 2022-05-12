@@ -1,5 +1,4 @@
 //Código para ESP8266
-#include <ESP8266WiFi.h>
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include "SSD1306Wire.h"
@@ -15,7 +14,7 @@ Adafruit_INA219 ina_B(0x44);// Sensor B
 unsigned long previousMillis = 0;
 unsigned long previousSent = 0;
 unsigned long interval = 100; //Periodo de refresco
-unsigned long tspk_interval = 900 * 1000; 
+unsigned long data_interval = 900 * 1000; 
 const int chipSelect = 10;
 
 //Valores para el sensor A
@@ -47,16 +46,16 @@ int y2 = 18 + yb;
 int y3 = (y2-yb) * 2 + yb;
 int y4 = (y2-yb) * 3 + yb;
 
-// Wi-Fi Settings
-const char* ssid = "rBazan POCO X3 Pro"; // your wireless network name (SSID)
-const char* password = "Aa123456"; // your Wi-Fi network password
+// // Wi-Fi Settings
+// const char* ssid = "rBazan POCO X3 Pro"; // your wireless network name (SSID)
+// const char* password = "Aa123456"; // your Wi-Fi network password
 
-WiFiClient client;
-// ThingSpeak Settings
-const int channelID = 000000;
-String writeAPIKey = "V6S2J4FG276MBTYJ"; // write API key for your ThingSpeak Channel
-const char* server = "api.thingspeak.com";
-//const int postingInterval = 600 * 1000; // post data every x seconds
+// WiFiClient client;
+// // ThingSpeak Settings
+// const int channelID = 000000;
+// String writeAPIKey = "V6S2J4FG276MBTYJ"; // write API key for your ThingSpeak Channel
+// const char* server = "api.thingspeak.com";
+// //const int postingInterval = 600 * 1000; // post data every x seconds
 
 ////Sensores de luz
 //int topleft;
@@ -96,17 +95,19 @@ void loop() {
     
     displaydata();  //imprimiendo datos en el display oled
 
-    if (currentMillis - previousSent >= tspk_interval) {
+    //intervalo en que se envian los datos
+    if (currentMillis - previousSent >= data_interval) {
     previousSent = currentMillis;    
 
-    send_data();
+    // send_data();
+
     }
   }
 }
 
 void ina219values() {
-  //Valores para sensor A
 
+  //Valores para sensor A
   shuntvoltage_A = ina_A.getShuntVoltage_mV();
   busvoltage_A = ina_A.getBusVoltage_V();
   current_mA_A = ina_A.getCurrent_mA();
@@ -127,42 +128,7 @@ void ina219values() {
 }
 
 void send_data(){
-    WiFi.begin(ssid, password);
-    
-  while (WiFi.status() != WL_CONNECTED) {
-    display_mensaje("Conectando...");
-    Serial.println("Conectando");
-    delay(500);
-  }
-    Serial.println("Conectado!");
-
-  if (client.connect(server, 80)) {
-
-    // Measure Analog Input (A0)
-    float h = 10.5;
-    float t = 7.7;
-    
-    // Construct API request body
-    String body = "&field1=";
-           body += String(power_A);
-           body += "&field2=";
-           body += String(power_B);
-           body += "&field3=";
-           body += String(delta);
-           
-    client.println("POST /update HTTP/1.1");
-    client.println("Host: api.thingspeak.com");
-    client.println("User-Agent: ESP8266 (nothans)/1.0");
-    client.println("Connection: close");
-    client.println("X-THINGSPEAKAPIKEY: " + writeAPIKey);
-    client.println("Content-Type: application/x-www-form-urlencoded");
-    client.println("Content-Length: " + String(body.length()));
-    client.println("");
-    client.print(body);
-    Serial.println("Datos enviados :)");
-  }
-  client.stop();
-
+  
   }
 
 void display_mensaje(String mensaje) {
