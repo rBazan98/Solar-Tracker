@@ -4,11 +4,6 @@
 #include <Adafruit_INA219.h>
 #include "SSD1306Wire.h"
 
-//Librerias blink
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <BlynkSimpleEsp32.h>
-
 //#define OLED_RESET 4
 
 //Inicializando los dispositivos I2C como instancias de sus respectivas librerias
@@ -83,8 +78,6 @@ xC = xC - 5; //Correccion columna C del display
   
   //Iniciando comunicación serial
   Serial.begin(115200);
-  Blynk.begin(auth, ssid, pass);
-  
 }
 
 void loop() {
@@ -106,9 +99,7 @@ void loop() {
     if (currentMillis - previousSent >= tspk_interval) {
     previousSent = currentMillis;    
 
-//    send_data();
-    send_data_2();
-    
+    send_data();
     }
   }
 }
@@ -134,19 +125,6 @@ void ina219values() {
   //delta
     delta = 100*(power_A - power_B)/power_B;
 }
-
-void send_data_2(){
-
-  char auth[] = "wwtWbdKhe0a8HEfe9SdpC_9Wtwc-9eaK";
-  char ssid[] = "HUAWEI Mate 20 lite";
-  char pass[] = "952898fca99e";
-
-  Blynk.run();
-  Blynk.virtualWrite(V1,power_A);
-  Blynk.virtualWrite(V2,power_B);
-  
-}
-
 
 void send_data(){
     WiFi.begin(ssid, password);
