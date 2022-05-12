@@ -2,8 +2,43 @@
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include "SSD1306Wire.h"
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
 
-//#define OLED_RESET 4
+//Constantes para Blynk
+#define BLYNK_TEMPLATE_ID           "TMPLv4XzcfX4"
+#define BLYNK_DEVICE_NAME           "Quickstart Device"
+#define BLYNK_AUTH_TOKEN            "yid8DIZTWnryOk78yRa2NCoi7KwujYjV"
+
+//Variables de red
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "vodafoneC6F8-RPT";
+char pass[] = "karen2020";
+BlynkTimer timer;
+
+//obteniendo estado de interruptor V0
+BLYNK_WRITE(V0)
+{
+  // Set incoming value from pin V0 to a variable
+  int value = param.asInt();  // ------>> reescribir en una variable global
+  // Update state (Panel en Blynk)
+  Blynk.virtualWrite(V1, value);
+}
+
+//Accion al realizar la conexion
+BLYNK_CONNECTED()
+{
+}
+
+//envia el tiempo activo (opcional)
+void myTimerEvent()
+{
+  // You can send any value at any time.
+  // Please don't send more that 10 values per second.
+  Blynk.virtualWrite(V2, millis() / 1000);
+}
+
+
 
 //Inicializando los dispositivos I2C como instancias de sus respectivas librerias
 SSD1306Wire display(0x3C, SDA, SCL); //Display OLED
@@ -16,6 +51,7 @@ unsigned long previousSent = 0;
 unsigned long interval = 100; //Periodo de refresco
 unsigned long data_interval = 900 * 1000; 
 const int chipSelect = 10;
+
 
 //Valores para el sensor A
 float shuntvoltage_A = 0;
@@ -75,21 +111,30 @@ xC = xC - 5; //Correccion columna C del display
 
   display.flipScreenVertically();
   
-  //Iniciando comunicación serial
+  //Iniciando comunicación serial, Blynk y temporizador
   Serial.begin(115200);
+  Blynk.begin(auth, ssid, pass);
+  timer.setInterval(1000L, myTimerEvent);
+
+
 }
 
 void loop() {
+  
+  //eventos de Blynk temporizados
+  Blynk.run();
+  timer.run();
+
 //configurando el tiempo de refresco
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval)
   {
     previousMillis = currentMillis;    
+//======================//
+//  codigo a ejecutar   //
+//======================//
 
-
-//codigo a ejecutar //
-
-//  solar_track();  //moviendo hacia el sol
+//  solar_track();  //moviendo hacia el sol (en la otra placa)
     
     ina219values(); //leyendo consumo
     
